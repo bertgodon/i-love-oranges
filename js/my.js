@@ -12,52 +12,11 @@
   drawSquareBackground();
   var $coords = [];
 
-  function storeCoords (xVal, yVal) {
-    $coords.push({x: xVal, y: yVal});
-  }
-  function isSquarePainted(xVal, yVal){
-    for (var i = 0; i < $coords.length; i++) {
-      if( $coords[i].x == xVal && $coords[i].y == yVal ){
-        console.log("square already painted");
-        return true;
-      }
-    }
-    return false;
-  };
-
-
-  $( window ).resize(function() {
-      $windowWith = window.innerWidth;
-      $windowHight = window.innerHeight;
-  });
-
-  $('body').mousedown(function(event) {
-    switch (event.which) {
-        case 1:
-            handleLeftMouseClick(event);
-            break;
-        case 2:
-            alert('Middle Mouse button pressed.');
-            break;
-        case 3:        
-            event.preventDefault();
-            event.stopPropagation();
-
-            handleRightMouseClick(event);
-            break;
-        default:
-            alert('You have a strange Mouse!');
-    }
-});
-
-  function handleRightMouseClick(event){
-    var xPos = event.pageX;
-    var yPos = event.pageY;
-    $colorPicker.dialog({
+  $colorPicker.dialog({
       modal: true,
+      autoOpen: false,
       draggable: false,
       resizable: false,
-      position: [xPos, yPos],
       show: "fade",
       hide: 'fade',
       width: 400,
@@ -105,6 +64,52 @@
         }
       ]
     } );
+
+  function storeCoords (xVal, yVal) {
+    $coords.push({x: xVal, y: yVal});
+  }
+
+  function isSquarePainted(xVal, yVal){
+    for (var i = 0; i < $coords.length; i++) {
+      if( $coords[i].x == xVal && $coords[i].y == yVal ){
+        console.log("square already painted");
+            $coords.splice(i, 1);
+        return true;
+      }
+    }
+    return false;
+  };
+
+
+  $( window ).resize(function() {
+      $windowWith = window.innerWidth;
+      $windowHight = window.innerHeight;
+  });
+
+  $('body').mousedown(function(event) {
+    switch (event.which) {
+        case 1:
+            handleLeftMouseClick(event);
+            break;
+        case 2:
+            alert('Middle Mouse button pressed.');
+            break;
+        case 3:        
+            event.preventDefault();
+            event.stopPropagation();
+            handleRightMouseClick(event);
+            break;
+        default:
+            alert('You have a strange Mouse!');
+    }
+});
+
+  function handleRightMouseClick(event){
+    var offest = event.clientX;
+    var height = event.clientY;
+    console.log("opening dialog on: " +offest +" - " +height);
+    $colorPicker.dialog('open').dialog('option', 'position',[offest,height]);
+    
   };
 
   function drawSquareBackground(){
