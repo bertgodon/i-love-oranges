@@ -26,4 +26,12 @@ body {
     left:0;
     z-index:-4;
 }
-
+input[type="button"]{
+    height: 50px;
+    width: 50px;
+}
+.green {background-color: #4CAF50;} /* Green */
+.blue {background-color: #008CBA;} /* Blue */
+.red {background-color: red;} /* Red */ 
+.yellow {background-color: yellow; color: black;} /* Gray */ 
+.orange {background-color: orange;} /* Black */

@@ -6,6 +6,7 @@
   var ctx=canvas.getContext("2d");
   var $windowWith = window.innerWidth;
   var $windowHight = window.innerHeight;
+  var $colorPicker = $("#color-dialog");
   ctx.canvas.width  = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
   drawSquareBackground();
@@ -38,13 +39,73 @@
         case 2:
             alert('Middle Mouse button pressed.');
             break;
-        case 3:
-            alert('Right Mouse button pressed.');
+        case 3:        
+            event.preventDefault();
+            event.stopPropagation();
+
+            handleRightMouseClick(event);
             break;
         default:
             alert('You have a strange Mouse!');
     }
 });
+
+  function handleRightMouseClick(event){
+    var xPos = event.pageX;
+    var yPos = event.pageY;
+    $colorPicker.dialog({
+      modal: true,
+      draggable: false,
+      resizable: false,
+      position: [xPos, yPos],
+      show: "fade",
+      hide: 'fade',
+      width: 400,
+      dialogClass: 'ui-dialog-osx',
+      buttons: [
+        {
+          text : "Red",
+          class : "red" ,
+          click: function() {
+              $color = "red";
+              $( this ).dialog( "close" );
+            }
+        },
+        {
+          text : "Blue",
+          class : "blue" ,
+          click: function() {
+              $color = "blue";
+              $( this ).dialog( "close" );
+            }
+        },
+        {
+          text : "Green",
+          class : "green" ,
+          click: function() {
+              $color = "green";
+              $( this ).dialog( "close" );
+            }
+        },
+        {
+          text : "Yellow",
+          class : "yellow" ,
+          click: function() {
+              $color = "yellow";
+              $( this ).dialog( "close" );
+            }
+        },
+        {
+          text : "Orange",
+          class : "orange" ,
+          click: function() {
+              $color = "orange";
+              $( this ).dialog( "close" );
+            }
+        }
+      ]
+    } );
+  };
 
   function drawSquareBackground(){
     var calculatedSquareSide = $windowWith/100;
@@ -92,6 +153,8 @@
   };
  
 
-
+$(document).contextmenu(function () {
+    return false;
+});
 
   })(jQuery);
