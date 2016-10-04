@@ -9,6 +9,7 @@
   var $colorPicker = $("#color-dialog");
   ctx.canvas.width  = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
+  var $isRightMouseActive = false;
   drawSquareBackground();
   var $coords = [];
 
@@ -17,8 +18,14 @@
       autoOpen: false,
       draggable: false,
       resizable: false,
-      show: "fade",
-      hide: 'fade',
+      show: {
+        effect: "fade",
+        duration: 1000
+      },
+      hide: {
+        effect: "fade",
+        duration: 1000
+      },
       width: 400,
       dialogClass: 'ui-dialog-osx',
       buttons: [
@@ -28,6 +35,7 @@
           click: function() {
               $color = "red";
               $( this ).dialog( "close" );
+              $isRightMouseActive = false;
             }
         },
         {
@@ -36,6 +44,7 @@
           click: function() {
               $color = "blue";
               $( this ).dialog( "close" );
+              $isRightMouseActive = false;
             }
         },
         {
@@ -44,6 +53,7 @@
           click: function() {
               $color = "green";
               $( this ).dialog( "close" );
+              $isRightMouseActive = false;
             }
         },
         {
@@ -52,6 +62,7 @@
           click: function() {
               $color = "yellow";
               $( this ).dialog( "close" );
+              $isRightMouseActive = false;
             }
         },
         {
@@ -60,6 +71,7 @@
           click: function() {
               $color = "orange";
               $( this ).dialog( "close" );
+              $isRightMouseActive = false;
             }
         }
       ]
@@ -89,7 +101,9 @@
   $('body').mousedown(function(event) {
     switch (event.which) {
         case 1:
-            handleLeftMouseClick(event);
+            if (!$isRightMouseActive) {
+              handleLeftMouseClick(event);
+            };
             break;
         case 2:
             alert('Middle Mouse button pressed.');
@@ -97,6 +111,7 @@
         case 3:        
             event.preventDefault();
             event.stopPropagation();
+            $isRightMouseActive = true;
             handleRightMouseClick(event);
             break;
         default:
