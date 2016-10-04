@@ -10,13 +10,12 @@
   ctx.canvas.width  = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
   var $isRightMouseActive = false;
+  var $mousedown = false;
   drawSquareBackground();
   var $coords = [];
 
   $colorPicker.dialog({
-      modal: true,
       autoOpen: false,
-      draggable: false,
       resizable: false,
       show: {
         effect: "fade",
@@ -26,7 +25,6 @@
         effect: "fade",
         duration: 1000
       },
-      width: 400,
       dialogClass: 'ui-dialog-osx',
       buttons: [
         {
@@ -78,13 +76,14 @@
     } );
 
   function storeCoords (xVal, yVal) {
-    $coords.push({x: xVal, y: yVal});
+    if(!isSquarePainted(xVal, yVal)){
+          $coords.push({x: xVal, y: yVal});
+    }
   }
 
   function isSquarePainted(xVal, yVal){
     for (var i = 0; i < $coords.length; i++) {
       if( $coords[i].x == xVal && $coords[i].y == yVal ){
-        console.log("square already painted");
             $coords.splice(i, 1);
         return true;
       }
@@ -97,8 +96,11 @@
       $windowWith = window.innerWidth;
       $windowHight = window.innerHeight;
   });
-
-  $('body').mousedown(function(event) {
+  $(document).mouseup(function(event) {
+        $mousedown = false;
+  });
+  $(document).mousedown(function(event) {
+    $mousedown = true;
     switch (event.which) {
         case 1:
             if (!$isRightMouseActive) {
@@ -109,8 +111,6 @@
             alert('Middle Mouse button pressed.');
             break;
         case 3:        
-            event.preventDefault();
-            event.stopPropagation();
             $isRightMouseActive = true;
             handleRightMouseClick(event);
             break;
@@ -119,10 +119,10 @@
     }
 });
 
-  function handleRightMouseClick(event){
-    var offest = event.clientX;
-    var height = event.clientY;
-    $colorPicker.dialog('open').dialog('option', 'position',[offest,height]);
+
+  function handleRightMouseClick(e){
+    $colorPicker.dialog( "option", "position", {at: "left top",my: "left top", of: event } );
+    $colorPicker.dialog('open');
   };
 
   function drawSquareBackground(){
@@ -144,23 +144,30 @@
   }
 
   function handleLeftMouseClick(e){
-    findSquare(e.pageX, e.pageY);
+    findSquare(e.pageX, e.pageY, false);
   };
 
-  function findSquare(x, y){
+  function findSquare(x, y, drawing){
     var tickedSquareX = Math.floor(x/$squareSide);
     var tickedSquareY = Math.floor(y/$squareSide);
-    if(isSquarePainted(tickedSquareX, tickedSquareY)){
+    if(isSquarePainted(tickedSquareX, tickedSquareY) && ! drawing){
         ctx.clearRect(tickedSquareX*$squareSide,tickedSquareY*$squareSide,$squareSide,$squareSide);
         ctx.strokeRect(tickedSquareX*$squareSide,tickedSquareY*$squareSide,$squareSide,$squareSide);
     } else {
-      console.log(tickedSquareX, tickedSquareX);
       colorTickedSquare(tickedSquareX, tickedSquareY);
     }
  
   };
 
 
+    $(document).mousemove(function (e) {
+ 
+      
+       if(!$isRightMouseActive && $mousedown ){
+          findSquare(e.pageX, e.pageY, true);
+    }
+
+    });
 
   function colorTickedSquare(x, y){
     ctx.fillStyle= $color;
@@ -170,8 +177,8 @@
   };
  
 
-$(document).contextmenu(function () {
+  $(document).contextmenu(function() {
     return false;
-});
+  });
 
   })(jQuery);
