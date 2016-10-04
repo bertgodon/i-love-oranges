@@ -107,9 +107,7 @@
   function handleRightMouseClick(event){
     var offest = event.clientX;
     var height = event.clientY;
-    console.log("opening dialog on: " +offest +" - " +height);
     $colorPicker.dialog('open').dialog('option', 'position',[offest,height]);
-    
   };
 
   function drawSquareBackground(){
@@ -151,9 +149,8 @@
 
   function colorTickedSquare(x, y){
     ctx.fillStyle= $color;
-
-    console.log("square: " +x*$squareSide +";"+y*$squareSide),
     ctx.fillRect(x*$squareSide,y*$squareSide,$squareSide,$squareSide);
+    ctx.strokeRect(x*$squareSide,y*$squareSide,$squareSide,$squareSide);
     storeCoords(x, y);
   };
  
